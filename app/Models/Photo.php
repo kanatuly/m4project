@@ -11,4 +11,8 @@ class Photo extends Model
     public function book(){
         return $this->belongsTo('App\Models\Book', 'book_id');
     }
+    public function photos()
+    {
+        return $this->hasOne('App\Models\Thumbnail');
+    }
 }
