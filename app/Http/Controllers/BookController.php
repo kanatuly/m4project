@@ -67,6 +67,7 @@ class BookController extends Controller
         $book = Book::find($id);
         
         foreach ($book->photos as $photo){
+            $photo->thumbnail->delete();
             $photo->delete();
         }
         $book->delete();
