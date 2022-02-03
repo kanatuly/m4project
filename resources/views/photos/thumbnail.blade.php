@@ -27,12 +27,14 @@
     </head>
     <body>
         <nav>
-            <button onclick="location.href='/books/show/{{$book->id}}'">
+            <button onclick="location.href='/books/show/{{$id}}'">
                 Back
             </button>
         </nav>
-        @foreach ($book->photos as $photo)
-            <img src="/storage/photos/{{$photo->name}}">
+        @foreach ($thumbnails as $thumbnail)
+            <img src="/storage/thumbs/{{$thumbnail->name}}">
+            <a>{{$thumbnail->description}}</a>
+            <br>
         @endforeach
        
     </body>

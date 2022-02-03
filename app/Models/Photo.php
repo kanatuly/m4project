@@ -8,10 +8,11 @@ use Illuminate\Database\Eloquent\Model;
 class Photo extends Model
 {
     use HasFactory;
+    //protected $with = [''];
     public function book(){
         return $this->belongsTo('App\Models\Book', 'book_id');
     }
-    public function photos()
+    public function thumbnail()
     {
         return $this->hasOne('App\Models\Thumbnail');
     }

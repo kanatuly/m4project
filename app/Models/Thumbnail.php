@@ -7,8 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class Thumbnail extends Model
 {
-    //use HasFactory;
-    public function book(){
+    use HasFactory;
+    public function photo(){
         return $this->belongsTo('App\Models\Photo');
     }
 }

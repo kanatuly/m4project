@@ -2,17 +2,21 @@
 
 namespace App\Http\Controllers;
 
+use App\Jobs\ResizePhoto;
 use App\Models\Book;
 use App\Models\Photo;
 use Illuminate\Http\Request;
-use Image;
 
 class PhotoController extends Controller
 {
     public function thumbnail($id)
     {
         $book = Book::find($id);
-        return view('photos.thumbnail', ['book' => $book]);
+        $thumbnails = [];
+        foreach ($book->photos as $photo){
+            array_push($thumbnails, $photo->thumbnail);
+        }
+        return view('photos.thumbnail', ['thumbnails' => $thumbnails,'id' => $book->id]);
     }
     public function create($id)
     {
@@ -30,6 +34,7 @@ class PhotoController extends Controller
         $photo->book_id = $id;
         $photo->description = $request->text;
         $photo ->save();
+        ResizePhoto::dispatch($photo);
         return redirect("books\show\\".$id);
     }
 }
