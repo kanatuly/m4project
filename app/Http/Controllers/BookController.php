@@ -46,7 +46,7 @@ class BookController extends Controller
     public function edit($id)
     {
         $book = Book::find($id);
-        if (Auth::user()->cannot('update', $book)){
+        if (!Auth::check() || Auth::user()->cannot('update', $book)){
             abort(403);
         }
         $authors = Author::all();
@@ -69,7 +69,7 @@ class BookController extends Controller
     public static function destroy($id)
     {
         $book = Book::find($id);
-        if (Auth::user()->cannot('delete', $book)){
+        if (!Auth::check() || Auth::user()->cannot('delete', $book)){
             abort(403);
         }
         foreach ($book->photos as $photo){

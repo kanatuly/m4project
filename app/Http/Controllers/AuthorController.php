@@ -42,7 +42,7 @@ class AuthorController extends Controller
     public function edit($id)
     {
         $author = Author::find($id);
-        if (Auth::user()->cannot('update', $author)){
+        if !Auth::check() || (Auth::user()->cannot('update', $author)){
             abort(403);
         }
         return view('authors.edit', ['author' => $author]);
@@ -65,7 +65,7 @@ class AuthorController extends Controller
     {
         $author = Author::find($id);
         $author = Author::find($id);
-        if (Auth::user()->cannot('delete', $author)){
+        if (!Auth::check() || Auth::user()->cannot('delete', $author)){
             abort(403);
         }
         foreach ($author->books as $book){

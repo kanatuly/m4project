@@ -22,7 +22,7 @@ class PhotoController extends Controller
     public function create($id)
     {
         $book = Book::find($id);
-        if (Auth::user()->cannot('update', $book)){
+        if (!Auth::check() || Auth::user()->cannot('update', $book)){
             abort(403);
         }
         return view('photos.create', ['id' => $id]);
