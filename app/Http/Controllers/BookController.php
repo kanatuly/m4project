@@ -3,9 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Book;
-use App\Models\Author;
 use App\Models\Photo;
+use App\Models\Author;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class BookController extends Controller
 {
@@ -44,8 +45,11 @@ class BookController extends Controller
     
     public function edit($id)
     {
-        $authors = Author::all();
         $book = Book::find($id);
+        if (Auth::user()->cannot('update', $book)){
+            abort(403);
+        }
+        $authors = Author::all();
         return view('books.edit', ['book' => $book, 'authors' => $authors]);
     }
 
@@ -65,7 +69,9 @@ class BookController extends Controller
     public static function destroy($id)
     {
         $book = Book::find($id);
-        
+        if (Auth::user()->cannot('delete', $book)){
+            abort(403);
+        }
         foreach ($book->photos as $photo){
             $photo->thumbnail->delete();
             $photo->delete();

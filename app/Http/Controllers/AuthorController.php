@@ -2,15 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Author;
 use App\Models\Book;
+use App\Models\Author;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\BookController;
 
 class AuthorController extends Controller
 {
-    public function index()
-    {
+    public function index(Request $request)
+    {   
         $authors = Author::all();
         return view('authors.index', ['authors' => $authors]);
     }
@@ -41,6 +42,9 @@ class AuthorController extends Controller
     public function edit($id)
     {
         $author = Author::find($id);
+        if (Auth::user()->cannot('update', $author)){
+            abort(403);
+        }
         return view('authors.edit', ['author' => $author]);
     }
 
@@ -50,6 +54,7 @@ class AuthorController extends Controller
         $request->validate([
             'name' => 'required',
         ]);
+        
         $author = Author::find($id);
         $author->update($request->all());
         return redirect('/authors');
@@ -59,7 +64,10 @@ class AuthorController extends Controller
     public function destroy($id)
     {
         $author = Author::find($id);
-        
+        $author = Author::find($id);
+        if (Auth::user()->cannot('delete', $author)){
+            abort(403);
+        }
         foreach ($author->books as $book){
             BookController::destroy($book->id);
         }

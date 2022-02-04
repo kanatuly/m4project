@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Jobs\ResizePhoto;
 use App\Models\Book;
 use App\Models\Photo;
+use App\Jobs\ResizePhoto;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class PhotoController extends Controller
 {
@@ -20,6 +21,10 @@ class PhotoController extends Controller
     }
     public function create($id)
     {
+        $book = Book::find($id);
+        if (Auth::user()->cannot('update', $book)){
+            abort(403);
+        }
         return view('photos.create', ['id' => $id]);
     }
     public function store($id, Request $request)
@@ -28,6 +33,7 @@ class PhotoController extends Controller
             'text' => 'required',
             'photo' => 'required|image|mimes:jpg,png,jpeg,gif,svg|max:5242880',
         ]);
+        
         $photo = new Photo;
         $photo->name = time().'_'.$request->file('photo')->getClientOriginalName();
         $request->file('photo')->storeAs('photos', $photo->name, 'public');
