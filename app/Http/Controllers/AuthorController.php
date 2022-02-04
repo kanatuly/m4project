@@ -67,14 +67,9 @@ class AuthorController extends Controller
     public function destroy($id)
     {
         $author = Author::find($id);
-        $author = Author::find($id);
         if (!Auth::check() || Auth::user()->cannot('delete', $author)){
             abort(403);
         }
-        foreach ($author->books as $book){
-            BookController::destroy($book->id);
-        }
-        
         $author->delete();
         return redirect('/authors');
     }

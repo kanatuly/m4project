@@ -12,7 +12,7 @@ class CreatePhotosTable extends Migration
             $table->id();
             $table->string('name');
             $table->text('description');
-            $table->foreignId('book_id')->references('id')->on('books');
+            $table->foreignId('book_id')->constrained('books')->cascadeOnDelete();
             $table->timestamps();
         });
     }

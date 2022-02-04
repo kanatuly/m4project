@@ -17,8 +17,8 @@ class CreateBooksTable extends Migration
             $table->id();
             $table->string('title');
             $table->integer('pages');
-            $table->foreignId('user_id')->references('id')->on('users');
-            $table->foreignId('author_id')->references('id')->on('authors');
+            $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
+            $table->foreignId('author_id')->constrained('authors')->cascadeOnDelete();
             $table->timestamps();
         });
     }

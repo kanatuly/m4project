@@ -17,7 +17,7 @@ class CreateThumbnailsTable extends Migration
             $table->id();
             $table->string('name');
             $table->text('description');
-            $table->foreignId('photo_id')->references('id')->on('photos');
+            $table->foreignId('photo_id')->constrained('photos')->cascadeOnDelete();
             $table->timestamps();
         });
         

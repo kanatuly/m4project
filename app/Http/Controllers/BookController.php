@@ -79,10 +79,6 @@ class BookController extends Controller
         if (!Auth::check() || Auth::user()->cannot('delete', $book)){
             abort(403);
         }
-        foreach ($book->photos as $photo){
-            $photo->thumbnail->delete();
-            $photo->delete();
-        }
         $book->delete();
         return redirect('/books');
     }
