@@ -21,7 +21,10 @@ class BookController extends Controller
 
     public function create()
     {
-        $authors = Author::all();
+        if (!Auth::check()){
+            abort(403);
+        }
+        $authors = Author::where('user_id', Auth::id())->get();
         return view('books.create', ['authors' => $authors]);
     }
 
@@ -30,8 +33,11 @@ class BookController extends Controller
         $request->validate([
                 'title' => 'required',
                 'pages' => 'required',
+                'author_id' => 'required',
         ]);
-        Book::create($request->all());
+        $parameters = $request->all();
+        $parameters['user_id'] = Auth::id();
+        Book::create($parameters);
         return redirect('/books');
     }
 
@@ -49,7 +55,7 @@ class BookController extends Controller
         if (!Auth::check() || Auth::user()->cannot('update', $book)){
             abort(403);
         }
-        $authors = Author::all();
+        $authors = Author::where('user_id', Auth::id())->get();
         return view('books.edit', ['book' => $book, 'authors' => $authors]);
     }
 
@@ -59,6 +65,7 @@ class BookController extends Controller
         $request->validate([
             'title' => 'required',
             'pages' => 'required',
+            'author_id' => 'required',
         ]);
         $book = Book::find($id);
         $book->update($request->all());

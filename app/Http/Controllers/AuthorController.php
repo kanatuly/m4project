@@ -16,19 +16,22 @@ class AuthorController extends Controller
         return view('authors.index', ['authors' => $authors]);
     }
 
-     public function create()
-     {
-        
-         return view('authors.create');
-     }
+    public function create()
+    {
+        if (!Auth::check()){
+            abort(403);
+        }
+        return view('authors.create');
+    }
 
     public function store(Request $request)
     {
-        
         $request->validate([
                 'name' => 'required',
         ]);
-        Author::create($request->all());
+        $parameters = $request->all();
+        $parameters['user_id'] = Auth::id();
+        Author::create($parameters);
         return redirect('/authors');
     }
 
@@ -42,7 +45,7 @@ class AuthorController extends Controller
     public function edit($id)
     {
         $author = Author::find($id);
-        if !Auth::check() || (Auth::user()->cannot('update', $author)){
+        if (!Auth::check() || Auth::user()->cannot('update', $author)){
             abort(403);
         }
         return view('authors.edit', ['author' => $author]);
